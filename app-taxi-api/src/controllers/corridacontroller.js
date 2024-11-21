@@ -1,25 +1,28 @@
-const Corrida = require('../models/corrida');
 const axios = require('axios');
 
-exports.criarCorrida = async (req, res) => {
-  const { origem, destino } = req.body;
-  // Chamar API do Google Maps para calcular distância e tempo estimado
-  const response = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origem}&destinations=${destino}&key=YOUR_GOOGLE_MAPS_API_KEY`);
-  
-  const { distance, duration } = response.data.rows[0].elements[0];
-  const novaCorrida = new Corrida({ origem, destino, distancia: distance.value, tempoEstimado: duration.value });
-  await novaCorrida.save();
-  res.status(201).json(novaCorrida);
+exports.calcularDistancia = async (origem, destino) => {
+  const origemCoords = await obterCoordenadas(origem);
+  const destinoCoords = await obterCoordenadas(destino);
+  const url = `http://router.project-osrm.org/route/v1/driving/${origemCoords};${destinoCoords}?overview=false`;
+
+  const response = await axios.get(url);
+  if (response.data.code !== 'Ok') {
+    throw new Error('Erro ao chamar a API do OSRM');
+  }
+
+  const rota = response.data.routes[0];
+  return {
+    distancia: rota.distance, // distância em metros
+    duracao: rota.duration // duração em segundos
+  };
 };
 
-exports.listarCorridas = async (req, res) => {
-  const corridas = await Corrida.find();
-  res.status(200).json(corridas);
-};
-
-exports.atualizarStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const corridaAtualizada = await Corrida.findByIdAndUpdate(id, { status }, { new: true });
-  res.status(200).json(corridaAtualizada);
-};
+async function obterCoordenadas(endereco) {
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(endereco)}&format=json&limit=1`;
+  const response = await axios.get(url);
+  if (response.data.length === 0) {
+    throw new Error('Endereço não encontrado');
+  }
+  const { lat, lon } = response.data[0];
+  return `${lon},${lat}`;
+}
