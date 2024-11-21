@@ -1,28 +1,28 @@
-const axios = require('axios');
+const Corrida = require('../models/corrida');
+const { calcularDistancia } = require('../services/osrmService');
 
-exports.calcularDistancia = async (origem, destino) => {
-  const origemCoords = await obterCoordenadas(origem);
-  const destinoCoords = await obterCoordenadas(destino);
-  const url = `http://router.project-osrm.org/route/v1/driving/${origemCoords};${destinoCoords}?overview=false`;
+exports.criarCorrida = async (req, res) => {
+  const { origem, destino } = req.body;
 
-  const response = await axios.get(url);
-  if (response.data.code !== 'Ok') {
-    throw new Error('Erro ao chamar a API do OSRM');
+  try {
+    const { distancia, duracao } = await calcularDistancia(origem, destino);
+    
+    const novaCorrida = new Corrida({ origem, destino, distancia, tempoEstimado: duracao });
+    await novaCorrida.save();
+    res.status(201).json(novaCorrida);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao criar corrida', error: error.message });
   }
-
-  const rota = response.data.routes[0];
-  return {
-    distancia: rota.distance, // distância em metros
-    duracao: rota.duration // duração em segundos
-  };
 };
 
-async function obterCoordenadas(endereco) {
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(endereco)}&format=json&limit=1`;
-  const response = await axios.get(url);
-  if (response.data.length === 0) {
-    throw new Error('Endereço não encontrado');
-  }
-  const { lat, lon } = response.data[0];
-  return `${lon},${lat}`;
-}
+exports.listarCorridas = async (req, res) => {
+  const corridas = await Corrida.find();
+  res.status(200).json(corridas);
+};
+
+exports.atualizarStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const corridaAtualizada = await Corrida.findByIdAndUpdate(id, { status }, { new: true });
+  res.status(200).json(corridaAtualizada);
+};
