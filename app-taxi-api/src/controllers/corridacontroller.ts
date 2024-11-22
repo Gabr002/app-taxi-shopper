@@ -7,9 +7,9 @@ export const estimateRides = async (req, res) => {
   try {
     const { distancia, duracao } = await calcularDistancia(origem, destino);
     
-    const novaCorrida = new Corrida({ origem, destino, distancia, tempoEstimado: duracao });
-    await novaCorrida.save();
-    res.status(201).json(novaCorrida);
+    // const novaCorrida = new Corrida({ origem, destino, distancia, tempoEstimado: duracao });
+    // await novaCorrida.save();
+    res.status(201).json({ distancia, duracao });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao criar corrida', error: error.message });
   }
