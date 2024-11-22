@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CorridaSchema = new mongoose.Schema({
   origem: { type: String, required: true },
@@ -9,4 +9,5 @@ const CorridaSchema = new mongoose.Schema({
 });
 
 const Corrida = mongoose.model('Corrida', CorridaSchema);
-module.exports = Corrida;
+
+export default Corrida;

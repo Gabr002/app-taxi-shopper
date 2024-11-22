@@ -1,7 +1,7 @@
-const Corrida = require('../models/corrida');
-const { calcularDistancia } = require('../services/osrmService');
+import Corrida from '../models/corrida';
+import { calcularDistancia } from '../services/osrmService';
 
-exports.criarCorrida = async (req, res) => {
+export const estimateRides = async (req, res) => {
   const { origem, destino } = req.body;
 
   try {
@@ -15,12 +15,12 @@ exports.criarCorrida = async (req, res) => {
   }
 };
 
-exports.listarCorridas = async (req, res) => {
+export const listarCorridas = async (req, res) => {
   const corridas = await Corrida.find();
   res.status(200).json(corridas);
 };
 
-exports.atualizarStatus = async (req, res) => {
+export const atualizarStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const corridaAtualizada = await Corrida.findByIdAndUpdate(id, { status }, { new: true });

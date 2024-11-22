@@ -1,9 +1,9 @@
-const axios = require('axios');
+import axios from 'axios';
 
-exports.calcularDistancia = async (origem, destino) => {
+export const calcularDistancia = async (origem, destino) => {
   const origemCoords = await obterCoordenadas(origem);
   const destinoCoords = await obterCoordenadas(destino);
-  const url = `http://router.project-osrm.org/route/v1/driving/${origemCoords};${destinoCoords}?overview=false`;
+  const url = process.env.GOOGLE_ROUTES_API_URL;
 
   const response = await axios.get(url);
   if (response.data.code !== 'Ok') {
