@@ -1,15 +1,13 @@
 import Corrida from '../models/corrida';
-import { calcularDistancia } from '../services/osrmService';
+import { calculateDistance } from '../services/googlePlacesService';
 
 export const estimateRides = async (req, res) => {
-  const { origem, destino } = req.body;
+  const { origin, destination } = req.body;
 
   try {
-    const { distancia, duracao } = await calcularDistancia(origem, destino);
+    const { distance, duration } = await calculateDistance(origin, destination);
     
-    // const novaCorrida = new Corrida({ origem, destino, distancia, tempoEstimado: duracao });
-    // await novaCorrida.save();
-    res.status(201).json({ distancia, duracao });
+    res.status(200).json({ distance, duration });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao criar corrida', error: error.message });
   }
