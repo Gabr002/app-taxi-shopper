@@ -1,16 +1,14 @@
-import './App.css'
-import  Map  from './components/Map'
 import { RideForm } from './components/RideForm'
 
-function App() {
+import './App.css'
+import Map from './components/Map'
 
+function App() {
   return (
-    <div>
+    <div className='flex gap-5'>
       <RideForm />
       <Map />
     </div>
-    
-    
   )
 }
 
