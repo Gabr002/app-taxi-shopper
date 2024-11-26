@@ -1,15 +1,8 @@
-import { RideForm } from './components/RideForm'
 
-import './App.css'
-import Map from './components/Map'
+import { Drive } from './pages'
+import '../src/assets/styles/index.css'
 
-function App() {
-  return (
-    <div className='flex gap-5'>
-      <RideForm />
-      <Map />
-    </div>
-  )
+export default function App() {
+  return <Drive/>
 }
 
-export default App
