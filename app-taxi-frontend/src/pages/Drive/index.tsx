@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import Modal from '../../components/Modal'
 import ListDrivers from './components/ListDrivers'
 import Overlay from '../../components/Overlay'
+import CPFInput from '../../components/CPFInput'
 const KEY: string = import.meta.env.VITE_GOOGLE_API_KEY
 
 export const Drive: React.FC = () => {
@@ -123,7 +124,7 @@ export const Drive: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Overlay isLoading={isLoading} message="Calculando rota..."/>
+      <Overlay isLoading={isLoading} message="Calculando rota..." />
       <Modal isVisible={isOpenSelectDriver} onClose={() => setIsOpenSelectDriver(null)}>
           <h1 className="text-2xl font-bold mb-4 w-full text-center">Sua viagem de <span className="text-green-600">{driverRouteText?.origin}</span> para <span className="text-green-600">{driverRouteText?.destination}</span> de <span className="text-green-600">{distanceMarker}</span> vai levar <span className="text-green-600">{duration}</span></h1>
           <ListDrivers drivers={drivers}/>
@@ -154,19 +155,22 @@ export const Drive: React.FC = () => {
 
   <div className='flex flex-col gap-4 mb-6'>
     <div className="relative">
-    <StandaloneSearchBox
-        onLoad={(ref) => (originRef.current = ref)}
-        onPlacesChanged={handleOnOriginPlacesChanged}
-      >
-      <input
-        id='origin'
-        type="text"
-        placeholder="De onde?"
-        ref={originRef}
-        className="w-full p-3 border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-      />          
-    </StandaloneSearchBox>
-      <CircleDot size={20} className='absolute top-3 right-3 text-gray-400'/>
+      <CPFInput />
+    </div>
+    <div className="relative">
+      <StandaloneSearchBox
+          onLoad={(ref) => (originRef.current = ref)}
+          onPlacesChanged={handleOnOriginPlacesChanged}
+        >
+        <input
+          id='origin'
+          type="text"
+          placeholder="Local de saída"
+          ref={originRef}
+          className="w-full p-3 border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        />          
+      </StandaloneSearchBox>
+      <CircleDot size={20} className='absolute top-3 right-3 text-gray-400 bg-white'/>
     </div>
     <span className='absolute -right-6 top-14 z-10 bg-white -translate-y-1/2 w-9 h-[1px] border border-gray-300 transform rotate-90'/>
     <div className="relative">
@@ -177,12 +181,12 @@ export const Drive: React.FC = () => {
       <input
         id='destination'
         type="text"
-        placeholder="Para onde?"
+        placeholder="Local de chegada"
         ref={destinationRef}
         className="w-full p-3 border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
       />          
     </StandaloneSearchBox>
-      <Flag size={20} className='absolute top-3 right-3 text-green-500'/>
+      <Flag size={20} className='absolute top-3 right-3 text-green-500 bg-white'/>
     </div>
   </div>
 
@@ -191,17 +195,16 @@ export const Drive: React.FC = () => {
       className="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
       onClick={calculateRoute}
     >
-      Estimar Valor da Viagem
+      Ver preços
     </button>
   </div>
 
-  <div className="flex items-center justify-between mt-4">
+  {/* <div className="flex items-center justify-between mt-4">
     <div>
       <p className="text-sm font-medium text-gray-600">Distância: <span className="font-semibold">{distance}</span></p>
       <p className="text-sm font-medium text-gray-600">Duração: <span className="font-semibold">{duration}</span></p>
     </div>
-
-  </div>
+  </div> */}
 </div>
     </div>
     </React.Fragment>

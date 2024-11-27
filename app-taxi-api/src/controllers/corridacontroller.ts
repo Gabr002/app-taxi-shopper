@@ -11,7 +11,7 @@ export const estimateRides = async (req, res) => {
       return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
 
-    if(origin === destination){
+    if(origin.lat === destination.lat && origin.lng === destination.lng){
       return res.status(400).json({ message: 'Origem e destino não podem ser iguais' });
     }
 
@@ -20,8 +20,10 @@ export const estimateRides = async (req, res) => {
     if(calculate.status){
       const drivers = await Driver.find();
 
+      console.log(calculate.distance, " --distance");
+      console.log(drivers[0].minimum_km , " --distance");
       const filteredDrivers = drivers.filter((driver) => {
-        return calculate.distance >= driver.minimum_km;
+        return (calculate.distance/1000) >= driver.minimum_km;
       })
 
       const options = filteredDrivers.map((driver) => {

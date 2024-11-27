@@ -7,3 +7,6 @@ router.get('/rides', listarCorridas);
 router.put('/rides/:id', atualizarStatus);
 
 export default router;
+
+
+
