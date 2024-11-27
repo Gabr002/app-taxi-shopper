@@ -1,6 +1,6 @@
 import { useJsApiLoader, GoogleMap, Marker, DirectionsRenderer, StandaloneSearchBox } from '@react-google-maps/api'
 import React, { useRef, useState, useEffect } from 'react'
-import { CircleDot, Flag } from 'lucide-react'
+import { CircleDot, CircleUser, Flag } from 'lucide-react'
 import estimateRide from '../../services/estimate-ride'
 import { LatLng } from 'use-places-autocomplete'
 import toast from 'react-hot-toast'
@@ -149,13 +149,14 @@ export const Drive: React.FC = () => {
       </div>
       <div className="absolute left-0 p-6 rounded-xl m-4 bg-white shadow-lg min-w-[24rem] z-20 border border-gray-200">
   <div className="mb-4">
-    <h2 className="text-lg font-semibold text-gray-700">Calcular Rota</h2>
+    <h2 className="text-lg font-semibold text-gray-700">Calcular rota</h2>
     <p className="text-sm text-gray-500">Insira os pontos de origem e destino para calcular a rota.</p>
   </div>
 
   <div className='flex flex-col gap-4 mb-6'>
     <div className="relative">
       <CPFInput />
+      <CircleUser className='absolute top-3 right-3 text-gray-400 bg-white' />
     </div>
     <div className="relative">
       <StandaloneSearchBox
