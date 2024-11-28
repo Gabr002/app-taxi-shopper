@@ -1,14 +1,14 @@
 import { Car, CircleDot, Flag, Star } from "lucide-react";
+import createRide from "../../../services/create-ride";
+import toast from "react-hot-toast";
 
-export default function CardDriver({ driver }) {
+export default function CardDriver({ driver, rideData, onConfirmRide }) {
     const rating = driver?.review?.rating || 0;
 
     const valorFormatado = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
     }).format(driver?.value);
-
-
 
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
@@ -28,6 +28,28 @@ export default function CardDriver({ driver }) {
         );
     };
 
+    const handleChooseDriver = async () => {
+        try {
+            const response = await createRide({
+                customer_id: "asdasdasdasd-asd13123",
+                origin: rideData?.origin,
+                destination: rideData?.destination,
+                distance: rideData?.distance,
+                estimatedTime: rideData?.estimatedTime,
+                driver_id: driver.id,
+            })
+
+            if (response){
+                toast.success("Corrida registrada com sucesso!");
+                onConfirmRide();
+            }    
+        } catch (error) {
+            toast.error(error)
+        } finally {
+            onConfirmRide();
+        }
+    }
+
     return (
         <div className="flex flex-col gap-4 bg-white shadow-md rounded-lg p-4 border border-gray-200 w-full">
             {/* Driver Information */}
@@ -46,7 +68,12 @@ export default function CardDriver({ driver }) {
 
                 <div className="flex flex-row gap-4 items-center justify-center">
                     <span className="text-lg font-bold text-gray-800">{valorFormatado}</span>
-                    <button className="text-base bg-green-500 overflow-hidden text-white px-2 py-1 rounded font-bold">Escolher</button>
+                    <button
+                        className="text-base bg-green-500 overflow-hidden text-white px-2 py-1 font-bold"
+                        onClick={handleChooseDriver}
+                    >
+                        Escolher
+                    </button>
                 </div>
             </div>
             <span className="text-sm text-gray-500 mt-1">{driver?.description}</span>

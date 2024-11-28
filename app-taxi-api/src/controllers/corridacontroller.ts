@@ -3,11 +3,11 @@ import Driver from '../models/drivers';
 import { calculateDistance } from '../services/googlePlacesService';
 
 export const estimateRides = async (req, res) => {
-  const { customer_id,origin, destination } = req.body;
+  const { customer_id, origin, destination } = req.body;
 
   try {
 
-    if(!customer_id || !origin || !destination){
+    if(!origin  || !destination){
       return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
 
@@ -19,9 +19,6 @@ export const estimateRides = async (req, res) => {
 
     if(calculate.status){
       const drivers = await Driver.find();
-
-      console.log(calculate.distance, " --distance");
-      console.log(drivers[0].minimum_km , " --distance");
       const filteredDrivers = drivers.filter((driver) => {
         return (calculate.distance/1000) >= driver.minimum_km;
       })
@@ -64,9 +61,17 @@ export const listarCorridas = async (req, res) => {
   res.status(200).json(corridas);
 };
 
-export const atualizarStatus = async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const corridaAtualizada = await Corrida.findByIdAndUpdate(id, { status }, { new: true });
-  res.status(200).json(corridaAtualizada);
+export const confirmRide = async (req, res) => {
+  const { origin, destination, distance, estimatedTime, driver_id } = req.body;
+
+  const newRide = await Corrida.create({
+    status: 'em andamento',
+    origin: origin,
+    destination: destination,
+    distance: distance,
+    estimatedTime: estimatedTime,
+    driver_id: driver_id,
+  });
+
+  res.status(200).json(newRide);
 };

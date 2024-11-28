@@ -1,10 +1,10 @@
 import * as express from "express";
 const router = express.Router();
-import { atualizarStatus, estimateRides, listarCorridas } from '../controllers/corridacontroller';
+import { confirmRide, estimateRides, listarCorridas } from '../controllers/corridacontroller';
 
 router.post('/rides/estimate', estimateRides);
 router.get('/rides', listarCorridas);
-router.put('/rides/:id', atualizarStatus);
+router.post('/ride/confirm', confirmRide);
 
 export default router;
 
