@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:4.2.2
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+
+  app-taxi-api:
+    build:
+      context: .
+      dockerfile: ./app-taxi-api/backend.dockerfile
+    container_name: app-taxi-api
+    environment:
+      MONGODB_URI: mongodb+srv://gdantaslopes62:ABHTt5jXxWDe8a9p@cluster0.map0b.mongodb.net/drive?retryWrites=true&w=majority&appName=Cluster0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+
+  app-taxi-front:
+    build:
+      context: .
+      dockerfile: ./app-taxi-frontend/frontend.dockerfile
+    container_name: app-taxi-frontend
+    environment:
+      PORT: 80
+    ports:
+      - "80:80"
+    depends_on:
+      - app-taxi-api
